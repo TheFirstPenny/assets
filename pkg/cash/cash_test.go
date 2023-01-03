@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewCashSuccess(t *testing.T) {
-	_, err := NewCash(10, &currency.RussianRuble)
+	_, err := NewCash("Cash", "Cash description", 10, &currency.RussianRuble)
 	if err != nil {
 		t.Fatalf("NewCash should not return err value")
 	}
@@ -16,7 +16,7 @@ func TestNewCashSuccess(t *testing.T) {
 
 func TestNewCashNegativeAmount(t *testing.T) {
 	var amount int64 = -1
-	_, err := NewCash(amount, &currency.RussianRuble)
+	_, err := NewCash("Cash", "Cash description", amount, &currency.RussianRuble)
     if (err == nil) {
         t.Fatalf(`NewCash function: passed amount=%d, expected err != nil`, amount)
     } else if err.Error() != NEGATIVE_VALUE_MESSAGE {
@@ -26,8 +26,8 @@ func TestNewCashNegativeAmount(t *testing.T) {
 
 func TestIncomeSuccess(t *testing.T) {
 	var amountBase, amountToAdd, expectedAmount int64 = 10, 5, 15
-	moneyBase, err := NewCash(amountBase, &currency.RussianRuble)
-	moneyToAdd, err := NewCash(amountToAdd, &currency.RussianRuble)
+	moneyBase, err := NewCash("Cash", "Cash description", amountBase, &currency.RussianRuble)
+	moneyToAdd, err := NewCash("Cash", "Cash description", amountToAdd, &currency.RussianRuble)
 
 	newCash, err := moneyBase.Income(&moneyToAdd)
 
@@ -41,8 +41,8 @@ func TestIncomeSuccess(t *testing.T) {
 
 func TestIncomeWithDifferentCurrency(t *testing.T) {
     var amount int64 = 1
-    moneyBase, _ := NewCash(amount, &currency.RussianRuble)
-    moneyToAdd, _ := NewCash(amount, &currency.BelarusianRuble)
+    moneyBase, _ := NewCash("Cash", "Cash description", amount, &currency.RussianRuble)
+    moneyToAdd, _ := NewCash("Cash", "Cash description", amount, &currency.BelarusianRuble)
 
     _, err := moneyBase.Income(&moneyToAdd)
 
@@ -55,8 +55,8 @@ func TestIncomeWithDifferentCurrency(t *testing.T) {
 
 func TestIncomeWithOverflow(t *testing.T) {
     var amount int64 = math.MaxInt64
-    moneyBase, _ := NewCash(amount, &currency.RussianRuble)
-    moneyToAdd, _ := NewCash(1, &currency.RussianRuble)
+    moneyBase, _ := NewCash("Cash", "Cash description", amount, &currency.RussianRuble)
+    moneyToAdd, _ := NewCash("Cash", "Cash description", 1, &currency.RussianRuble)
 
     _, err := moneyBase.Income(&moneyToAdd)
 
@@ -77,8 +77,8 @@ func TestIncomeWithOverflow(t *testing.T) {
 
 func TestExpenseSuccess(t *testing.T) {
    var amountBase, amountToSubtract, expectedAmount int64 = 15, 10, 5
-   moneyBase, err := NewCash(amountBase, &currency.RussianRuble)
-   moneyToSubtract, err := NewCash(amountToSubtract, &currency.RussianRuble)
+   moneyBase, err := NewCash("Cash", "Cash description", amountBase, &currency.RussianRuble)
+   moneyToSubtract, err := NewCash("Cash", "Cash description", amountToSubtract, &currency.RussianRuble)
 
    newCash, err := moneyBase.Expense(&moneyToSubtract)
 
@@ -91,8 +91,8 @@ func TestExpenseSuccess(t *testing.T) {
 
    amountToSubtract = 15
    expectedAmount = 0
-   moneyBase, _ = NewCash(amountBase, &currency.RussianRuble)
-   moneyToSubtract, err1 := NewCash(amountToSubtract, &currency.RussianRuble)
+   moneyBase, _ = NewCash("Cash", "Cash description", amountBase, &currency.RussianRuble)
+   moneyToSubtract, err1 := NewCash("Cash", "Cash description", amountToSubtract, &currency.RussianRuble)
 
    newCashZero, err1 := moneyBase.Expense(&moneyToSubtract)
 
@@ -106,8 +106,8 @@ func TestExpenseSuccess(t *testing.T) {
 
 func TestExpenseWithDifferentCurrency(t *testing.T) {
     var amountBase, amountToSubtract int64 = 2, 1
-    moneyBase, _ := NewCash(amountBase, &currency.RussianRuble)
-    moneyToSubtract, _ := NewCash(amountToSubtract, &currency.BelarusianRuble)
+    moneyBase, _ := NewCash("Cash", "Cash description", amountBase, &currency.RussianRuble)
+    moneyToSubtract, _ := NewCash("Cash", "Cash description", amountToSubtract, &currency.BelarusianRuble)
 
     _, err := moneyBase.Expense(&moneyToSubtract)
 
@@ -120,8 +120,8 @@ func TestExpenseWithDifferentCurrency(t *testing.T) {
 
 func TestExpenseWithNegativeResult(t *testing.T) {
     var amountBase, amountToSubtract int64 = 5, 10; 
-    moneyBase, _ := NewCash(amountBase, &currency.RussianRuble)
-    moneyToSubtract, _ := NewCash(amountToSubtract, &currency.RussianRuble)
+    moneyBase, _ := NewCash("Cash", "Cash description", amountBase, &currency.RussianRuble)
+    moneyToSubtract, _ := NewCash("Cash", "Cash description", amountToSubtract, &currency.RussianRuble)
 
     _, err1 := moneyBase.Expense(&moneyToSubtract)
 

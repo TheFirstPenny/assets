@@ -14,14 +14,16 @@ const OVERFLOW_VALUE_MESSAGE = "The amount too big"
 type Cash struct {
 	amount   int64
 	currency *currency.Currency
+    name string
+    description string
 }
 
-func NewCash(amount int64, currency *currency.Currency) (Cash, error) {
+func NewCash(name string, description string, amount int64, currency *currency.Currency) (Cash, error) {
 	if amount < 0 {
 		return Cash{}, fmt.Errorf(NEGATIVE_VALUE_MESSAGE)
 	}
 
-	return Cash{amount, currency}, nil
+    return Cash{name: name, description: description, amount: amount, currency: currency}, nil
 }
 
 func (m *Cash) Income(am *Cash) (Cash, error) {
@@ -32,7 +34,7 @@ func (m *Cash) Income(am *Cash) (Cash, error) {
         return Cash{}, fmt.Errorf(OVERFLOW_VALUE_MESSAGE)
     }
  
-	return Cash{m.amount + am.amount, m.currency}, nil
+    return Cash{amount: m.amount + am.amount, currency: m.currency}, nil
 }
 
 func (m *Cash) Expense(am *Cash) (Cash, error) {
@@ -43,7 +45,7 @@ func (m *Cash) Expense(am *Cash) (Cash, error) {
 		return Cash{}, fmt.Errorf(NEGATIVE_VALUE_MESSAGE)
 	}
 
-	return Cash{m.amount - am.amount, m.currency}, nil
+    return Cash{amount: m.amount - am.amount, currency: m.currency}, nil
 }
 
 func (m *Cash) isCurrencyEqual(am *Cash) bool {
